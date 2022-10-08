@@ -67,7 +67,24 @@ function validateMovie(movie) {
     genres: Joi.array().min(1).required(),
     year: Joi.number().required(),
   })
-  return schema.validate(movie)
+  return schema.validate(movie, {
+    presence: allRequired ? 'required' : 'optional',
+  })
+}
+
+function validateGet(getData) {
+  const schema = Joi.object({
+    limit: Joi.number().min(1),
+    fromYear: Joi.number(),
+    toYear: Joi.number(),
+    genre: Joi.string().valid(...genres),
+    select: Joi.string(),
+    directorID: Joi.string().min(5),
+    actorID: Joi.string().min(5),
+  })
+  return schema.validate(getData, {
+    presence: allRequired ? 'required' : 'optional',
+  })
 }
 
 app.get('/api/movies', (req, res) => {
